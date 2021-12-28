@@ -51,10 +51,28 @@ export const getById = async (req: Request, res: Response, next: NextFunction): 
 
 export const getByUrl = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 
-    Post.findOne({ url: req.params.url }, (err: NativeError, post: PostDocument) => {
-        if (err) { return next(err); }
-        res.send(post)
+    Post.aggregate([{
+        $match: {url: req.params.url}
+    }, {
+        $lookup: {
+            from: "users",
+            localField: "user",
+            foreignField: "_id",
+            as: "user"
+        }
+    }, {
+        $addFields:{
+            user: "$user.name"
+        }
+    }], function (err, result) {
+        if (!err && result[0])
+            res.send(result[0])
     });
+
+    // Post.findOne({ url: req.params.url }, {}, { populate: "user" }, (err: NativeError, post: PostDocument) => {
+    //     if (err) { return next(err); }
+    //     res.send(post)
+    // });
 }
 
 export const post = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
@@ -65,7 +83,7 @@ export const post = async (req: Request, res: Response, next: NextFunction): Pro
         body: req.body.body || "",
     })
 
-    Post.create(post, (err, post: PostDocument)=>{
+    Post.create(post, (err, post: PostDocument) => {
         if (err) { return next(err); }
         res.send(post)
     })

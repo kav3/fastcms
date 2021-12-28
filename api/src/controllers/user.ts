@@ -22,7 +22,7 @@ export const get = async (req: Request, res: Response, next: NextFunction): Prom
 
 export const post = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     await check("username", "Username is not valid").isLength({ min: 3 }).run(req);
-    await check("password", "Password is not valid").isLength({ min: 6 }).run(req);
+    // await check("password", "Password is not valid").isLength({ min: 6 }).run(req);
 
     const errors = validationResult(req);
 
@@ -34,7 +34,10 @@ export const post = async (req: Request, res: Response, next: NextFunction): Pro
     User.findOne({ username: req.body.username }, (err: NativeError, user: UserDocument) => {
         if (err) { return next(err); }
 
-        if (user) {
+        if (user && !req.body.password) {
+            res.send({ exist: !!user })
+            return;
+        } else if (user && req.body.password) {
             user.comparePassword(req.body.password, (err, isMatch) => {
                 if (err) { return next(err); }
                 if (!isMatch) {

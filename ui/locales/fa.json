@@ -1,0 +1,31 @@
+{
+    "fastcms": "سایت ساز",  
+    "submit": "ارسال",
+    "back": "برگشت",
+    "kaveh": "کاوه",
+    
+    "auth": {
+        "login": "ورود",
+        "logout": "خروج",
+        "register": "ثبت نام",
+        "username": "نام کاربری",
+        "password": "کلمه عبور",
+        "fullname": "نام"
+    },
+
+    "admin": {
+        "users": "کاربران",
+        "posts": "پست ها"
+    },
+
+    "validation":{
+        "required": "لازم",
+        "minlength": "باید حداقل {0} کاراکتر باشد",
+        "isemail": "باید ایمیل باشد"
+    },
+
+    "footer":{
+        "copyright_1": "ساخته شده با",
+        "copyright_2": "توسط"
+    }
+}
