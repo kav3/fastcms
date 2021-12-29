@@ -89,7 +89,7 @@ export const getUsers = async (req: Request, res: Response, next: NextFunction):
 
     await User.aggregate([...pipeline, {
         $facet: {
-            users: [
+            items: [
                 { $sort: { createdAt: -1 } },
                 { $skip: (page - 1) * limit },
                 { $limit: limit },

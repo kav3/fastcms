@@ -13,7 +13,7 @@ export enum Direction {
 
 export type Field = {
     name: string,
-    value: string | number | boolean | string[],
+    value: any,
     type: FieldType,
     dir: Direction,
     validators: [],
@@ -21,16 +21,16 @@ export type Field = {
     errors: []
 }
 
-export function createField() {
-    const field: Field = {
-        name: "",
+export function createField(name = "") {
+    const field: Field = reactive({
+        name: name,
         value: "",
         dir: Direction.LTR,
         type: FieldType.TEXT,
         validators: [],
         valid: false,
         errors: []
-    }
+    });
 
     return field;
 }
@@ -40,7 +40,8 @@ export const createForm = (fields: Field[]) =>
 
 export default function useForm(fields: Field[]) {
 
-    const form = reactive(createForm(fields))
+    // const form = reactive(createForm(fields))
+    const form = createForm(fields)
 
     const isValid = ref(true);
 

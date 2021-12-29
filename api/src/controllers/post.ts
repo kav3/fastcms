@@ -1,6 +1,6 @@
 import { Post, PostDocument } from "../models/post";
 import { Request, Response, NextFunction } from "express";
-import { CallbackError, NativeError } from "mongoose";
+import { CallbackError, isValidObjectId, Mongoose, NativeError } from "mongoose";
 import { body, check, validationResult } from "express-validator";
 
 export const getPosts = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
@@ -18,7 +18,7 @@ export const getPosts = async (req: Request, res: Response, next: NextFunction):
 
     await Post.aggregate([...pipeline, {
         $facet: {
-            posts: [
+            items: [
                 { $sort: { createdAt: -1 } },
                 { $skip: (page - 1) * limit },
                 { $limit: limit },
@@ -43,7 +43,7 @@ export const getPosts = async (req: Request, res: Response, next: NextFunction):
 
 export const getById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 
-    Post.findOne({ _id: req.params.id }, (err: NativeError, post: PostDocument) => {
+    Post.findOne(isValidObjectId(req.params.id) ? { _id: req.params.id }: {}, (err: NativeError, post: PostDocument) => {
         if (err) { return next(err); }
         res.send(post)
     });
@@ -52,7 +52,7 @@ export const getById = async (req: Request, res: Response, next: NextFunction): 
 export const getByUrl = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 
     Post.aggregate([{
-        $match: {url: req.params.url}
+        $match: { url: req.params.url }
     }, {
         $lookup: {
             from: "users",
@@ -61,7 +61,7 @@ export const getByUrl = async (req: Request, res: Response, next: NextFunction):
             as: "user"
         }
     }, {
-        $addFields:{
+        $addFields: {
             user: "$user.name"
         }
     }], function (err, result) {

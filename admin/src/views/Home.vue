@@ -14,11 +14,9 @@
 import DynamicInput from '@/components/DynamicInput.vue';
 import useForm, { createField, FieldType } from '@/composables/useForm';
 
-const username = createField();
-username.name = "username";
+const username = createField("username");
 
-const password = createField();
-password.name = "password";
+const password = createField("password");
 password.type = FieldType.PASSWORD;
 
 const { form } = useForm([username, password]);

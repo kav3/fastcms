@@ -16,7 +16,6 @@ mongoose.connect(process.env.MONGODB_URI).then(
 
 // const morgan = require('morgan');
 // const helmet = require('helmet');
-// const cors = require('cors');
 
 const app = express();
 
