@@ -1,5 +1,16 @@
 import { ref } from "vue";
 import useFetch from "./useFetch";
+
+// const toPostForm = (obj: any) => {
+//     if (obj) {
+//         const cloneObj = Object.assign({}, obj);
+//         Object.keys(cloneObj).map(function (key, index) {
+//             cloneObj[key] = cloneObj[key].value;
+//         })
+//         return cloneObj;
+//     }
+// }
+
 export default function usePosts(api = "/posts") {
     const posts = ref([{ title: "no post" }])
     const total = ref(0)
@@ -17,5 +28,13 @@ export default function usePosts(api = "/posts") {
         post.value = json;
     }
 
-    return { posts, total, get, post, getById }
+    const createOrUpdate = async () => {
+        // console.log(post.value)
+
+        const res = await fetch(`${process.env.VUE_APP_API}${api}`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(post.value) });
+        const json = await res.json();
+        post.value = json;
+    }
+
+    return { posts, total, get, post, getById, createOrUpdate }
 }

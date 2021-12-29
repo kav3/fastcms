@@ -42,11 +42,13 @@ export const getPosts = async (req: Request, res: Response, next: NextFunction):
 }
 
 export const getById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-
-    Post.findOne(isValidObjectId(req.params.id) ? { _id: req.params.id }: {}, (err: NativeError, post: PostDocument) => {
-        if (err) { return next(err); }
-        res.send(post)
-    });
+    if (isValidObjectId(req.params.id))
+        Post.findOne({ _id: req.params.id }, (err: NativeError, post: PostDocument) => {
+            if (err) { return next(err); }
+            res.send(post)
+        });
+    else
+        res.send(new Post({ title: "" }))
 }
 
 export const getByUrl = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
@@ -77,14 +79,19 @@ export const getByUrl = async (req: Request, res: Response, next: NextFunction):
 
 export const post = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 
-    let post = new Post({
-        title: req.body.title || "",
-        url: req.body.url || "",
-        body: req.body.body || "",
-    })
-
-    Post.create(post, (err, post: PostDocument) => {
+    Post.findOne({ _id: req.body._id }, (err: NativeError, post: PostDocument) => {
         if (err) { return next(err); }
-        res.send(post)
-    })
+
+        if (!post)
+            post = new Post();
+
+        post.title = req.body.title || "";
+        post.url = req.body.url || "";
+        post.body = req.body.body || "";
+
+        post.save((err, post: PostDocument) => {
+            if (err) { return next(err); }
+            res.send(post)
+        })
+    });
 }

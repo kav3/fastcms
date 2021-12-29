@@ -62,4 +62,16 @@ html.dark body {
 .ltr {
   direction: ltr;
 }
+
+.masonry-3-col {
+  column-count: 3;
+  column-gap: 1em;
+}
+.masonry-2-col {
+  column-count: 2;
+  column-gap: 1em;
+}
+.break-inside {
+  break-inside: avoid;
+}
 </style>
