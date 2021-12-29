@@ -32,6 +32,8 @@ app.get('/', (req, res) => {
 
 app.use('/api/v1', routes);
 
+app.use(express.static('files'))
+
 app.use(notFound);
 app.use(errorHandler);
 

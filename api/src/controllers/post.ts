@@ -88,6 +88,8 @@ export const post = async (req: Request, res: Response, next: NextFunction): Pro
         post.title = req.body.title || "";
         post.url = req.body.url || "";
         post.body = req.body.body || "";
+        console.log(req.body.images)
+        post.images = req.body.images || [];
 
         post.save((err, post: PostDocument) => {
             if (err) { return next(err); }

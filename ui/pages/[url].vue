@@ -1,9 +1,9 @@
 <template>
     <div>
         <img
-            class="w-full rounded my-2 h-72"
+            class="w-full rounded my-2 h-72 object-cover"
             alt="data.title"
-            :src="image"
+            :src="data.images[0]"
         />
         <h1 class="text-4xl font-bold" v-text="data.title"></h1>
         <div class="flex items-center justify-between gap-2 text-sm">
@@ -18,5 +18,4 @@ const route = useRoute()
 const { getByUrl } = usePosts();
 const { data } = await getByUrl(route.params.url.toString())
 useMeta({ title: data.value.title, meta: [{ name: "description", content: data.value.meta.description }] })
-let image = "https://picsum.photos/800/252/?blur";
 </script>

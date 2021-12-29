@@ -8,7 +8,7 @@
         </div>
       </Nav>
     </div>
-    <div class="max-w-5xl px-2 mx-auto dark:text-gray-200">
+    <div class="max-w-5xl px-2 mx-auto dark:text-gray-200 pt-16">
       <div class="min-h-screen flex flex-col">
         <NuxtPage class="m-auto w-full" />
         <div class="flex items-center justify-between gap-2 pb-4 text-gray-600">

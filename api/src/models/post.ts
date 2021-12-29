@@ -7,6 +7,7 @@ export type PostDocument = mongoose.Document & {
     body: string;
     publishedAt: Date;
     user: UserDocument;
+    images: string[];
 
     meta: {
         tags: string[];
@@ -21,6 +22,7 @@ const postSchema = new mongoose.Schema<PostDocument>(
         body: String,
         publishedAt: Date,
         user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+        images: { type: [String] },
 
         meta: {
             tags: Array,

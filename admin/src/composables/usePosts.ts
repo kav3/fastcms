@@ -23,7 +23,7 @@ export default function usePosts(api = "/posts") {
     }
 
     const getById = async (id = "new") => {
-        const res = await fetch(`${process.env.VUE_APP_API}${api}/id/${id}`);
+        const res = await fetch(`${process.env.VUE_APP_API}/${process.env.VUE_APP_VER}${api}/id/${id}`);
         const json = await res.json();
         post.value = json;
     }
@@ -31,7 +31,7 @@ export default function usePosts(api = "/posts") {
     const createOrUpdate = async () => {
         // console.log(post.value)
 
-        const res = await fetch(`${process.env.VUE_APP_API}${api}`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(post.value) });
+        const res = await fetch(`${process.env.VUE_APP_API}/${process.env.VUE_APP_VER}${api}`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(post.value) });
         const json = await res.json();
         post.value = json;
     }

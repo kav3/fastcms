@@ -13,8 +13,14 @@
             v-model="post.url"
             class="appearance-none block w-full bg-gray-200 border rounded py-2 px-4 focus:outline-none focus:bg-white text-lg dark:bg-gray-800 dark:border-gray-700"
         />
+        <label>images</label>
+        <ul>
+            <li v-for="img, index in post.images" :key="index" class="flex items-center gap-1">
+                <img :src="img" class="h-14" />
+            </li>
+        </ul>
         <label>body</label>
-        <ckeditor :editor="editor" v-model="post.body"></ckeditor>
+        <ckeditor :editor="editor" :config="editorConfig" v-model="post.body"></ckeditor>
 
         <div class="flex items-center gap-2 justify-between pt-2">
             <span>&nbsp;</span>
@@ -24,10 +30,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, reactive } from 'vue';
 import usePosts from '@/composables/usePosts';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+// import SourceEditing from '@ckeditor/ckeditor5-source-editing/src/sourceediting';
+
 import { useRoute } from 'vue-router';
+import UploadAdapter from "../utils/uploadAdapter"
 
 export default defineComponent({
     setup() {
@@ -38,13 +47,83 @@ export default defineComponent({
 
         const submit = () => createOrUpdate();
 
-        return { post, submit }
+        const uploader = (editor) => {
+            const fileRepository = editor.plugins.get("FileRepository");
+
+            fileRepository.createUploadAdapter = (loader) => {
+
+                loader.on("change:uploadResponse", (eventInfo, name, value, oldValue) => {
+                    let a = eventInfo + name + oldValue;
+                    if (a) {
+                        a += "a"
+                    }
+
+                    if (value)
+                        post.value["images"].push(value.default);
+                })
+
+                return new UploadAdapter(loader);
+            };
+        }
+
+        const editorConfig = reactive({
+            language: {
+                content: "fa",
+            },
+            allowedContent: true,
+            extraPlugins: [uploader, "MediaEmbed"],
+            link: {
+                addTargetToExternalLinks: true,
+            },
+            heading: {
+                options: [
+                    {
+                        model: "paragraph",
+                        title: "Paragraph",
+                        class: "ck-heading_paragraph",
+                    },
+                    {
+                        model: "heading2",
+                        view: "h2",
+                        title: "Heading 2",
+                        class: "text-2xl",
+                    },
+                    {
+                        model: "heading3",
+                        view: "h3",
+                        title: "Heading 3",
+                        class: "text-xl",
+                    },
+                    {
+                        model: "heading4",
+                        view: "h4",
+                        title: "Heading 4",
+                        class: "text-md",
+                    },
+                    {
+                        model: "heading5",
+                        view: "h5",
+                        title: "Heading 5",
+                        class: "text-sm",
+                    },
+                    {
+                        model: "heading6",
+                        view: "h6",
+                        title: "Heading 6",
+                        class: "text-xs",
+                    },
+                ],
+            },
+        })
+
+        return { post, submit, editorConfig }
     },
     data() {
         return {
-            editor: ClassicEditor
+            editor: ClassicEditor,
         }
-    }
+    },
+
 })
 
 </script>

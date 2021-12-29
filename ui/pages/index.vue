@@ -7,9 +7,10 @@
             >
                 <nuxt-link :to="post.url" class="flex flex-col">
                     <img
-                        class="w-full rounded-t h-24"
+                        v-if="post.images&&post.images.length>0"
+                        class="w-full rounded-t h-28 object-cover"
                         alt="data.title"
-                        src="https://picsum.photos/250/152/?blur"
+                        :src="post.images[0]"
                     />
                     <h2 class="p-4">{{ post.title }}</h2>
                 </nuxt-link>
