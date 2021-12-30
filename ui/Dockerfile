@@ -1,12 +1,12 @@
 FROM node:16-alpine3.14
 
-WORKDIR app
+ENV APP_ROOT /src
 
-COPY package.json .
+RUN mkdir ${APP_ROOT}
+WORKDIR ${APP_ROOT}
+ADD . ${APP_ROOT}
 
 RUN npm install
 
-COPY . .
-
-EXPOSE 3000
+ENV HOST 0.0.0.0
 CMD ["npm", "run", "dev"]
