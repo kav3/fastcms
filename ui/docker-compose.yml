@@ -1,18 +1,18 @@
 version: '3.9'
 
 services:
-  vue3:
+  nuxt:
     build: .
-    container_name: fastcmsadmin
+    container_name: fastcms
     restart: always
     networks: 
       - pn 
     environment:
       NODE_ENV: production
-      VUE_APP_API: https://api.fastcms.ir
-      VUE_APP_VER: api/v1
     ports:
-      - 80:80
+      - 3000:3000
+    command: 
+      "npm run start"
 networks:
   pn:
     external: 

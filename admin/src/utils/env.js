@@ -1,0 +1,1 @@
+export default process.env.NODE_ENV=="production" ? 'VUE_APP_API' + '/' + 'VUE_APP_VER' : process.env.VUE_APP_API + '/' + process.env.VUE_APP_VER

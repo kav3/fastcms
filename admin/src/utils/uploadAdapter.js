@@ -1,3 +1,5 @@
+import apiURL from "../utils/env"
+
 export default class UploadAdapter {
     constructor(loader) {
         // The file loader instance to use during the upload.
@@ -14,9 +16,9 @@ export default class UploadAdapter {
                     const fd = new FormData();
                     fd.append('file', uploadedFile)
 
-                    fetch(process.env.VUE_APP_API + "/" + process.env.VUE_APP_VER + "/upload", { method: "POST", body: fd }).then(async res => {
+                    fetch(apiURL + "/upload", { method: "POST", body: fd }).then(async res => {
                         const json = await res.json();
-                        resolve({ default: process.env.VUE_APP_API + "/img/" + json.filename })
+                        resolve({ default: process.env.NODE_ENV == "production" ? "VUE_APP_API" : process.env.VUE_APP_API + "/img/" + json.filename })
                     }).catch(err => {
                         console.log(err)
                         reject();
