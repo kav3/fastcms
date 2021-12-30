@@ -9,6 +9,8 @@ services:
       - pn 
     environment:
       NODE_ENV: production
+      VUE_APP_API: https://a.fastcms.ir
+      VUE_APP_VER: api/v1
     ports:
       - 8080:8080
 networks:
