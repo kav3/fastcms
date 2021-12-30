@@ -7,8 +7,8 @@ for file in $ROOT_DIR/js/app.*.js* $ROOT_DIR/index.html $ROOT_DIR/precache-manif
 do
   echo "Processing $file ...";
 
-  sed -i 's|VUE_APP_API|'${VUE_APP_API}'|g' $file
-  sed -i 's|VUE_APP_VER|'${VUE_APP_VER}'|g' $file
+  # sed -i 's|VUE_APP_API|'${VUE_APP_API}'|g' $file
+  # sed -i 's|VUE_APP_VER|'${VUE_APP_VER}'|g' $file
 
 done
 
