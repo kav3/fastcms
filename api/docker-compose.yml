@@ -1,0 +1,19 @@
+version: '3.9'
+
+services:
+  api:
+    build: .
+    container_name: fastcmsapi
+    restart: always
+    networks: 
+      - pn 
+    environment:
+      NODE_ENV: production
+    ports:
+      - 5000:5000
+    command: 
+      "npm run start"
+networks:
+  pn:
+    external: 
+      name: private-network
