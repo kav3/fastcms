@@ -97,8 +97,6 @@ export const post = async (req: Request, res: Response, next: NextFunction): Pro
         console.log(req.body.images)
         post.images = req.body.images || [];
 
-        console.log(req.body.publishedAt)
-
         if (req.body.publishedAt)
             post.publishedAt = Date.now();
         else
