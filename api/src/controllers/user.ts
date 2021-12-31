@@ -3,6 +3,7 @@ import { Request, Response, NextFunction } from "express";
 import { CallbackError, NativeError } from "mongoose";
 import { tokenSign } from "../utils/auth";
 import { body, check, validationResult } from "express-validator";
+import { Roles } from "../enums";
 
 export const get = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     await check("username", "Username is not valid").isLength({ min: 3 }).run(req);
@@ -34,29 +35,30 @@ export const post = async (req: Request, res: Response, next: NextFunction): Pro
     User.findOne({ username: req.body.username }, (err: NativeError, user: UserDocument) => {
         if (err) { return next(err); }
 
-        if (user && !req.body.password) {
+        if (!req.body.password) {
             res.send({ exist: !!user })
             return;
-        } else if (user && req.body.password) {
+        } else if (user) {
             user.comparePassword(req.body.password, (err, isMatch) => {
                 if (err) { return next(err); }
-                if (!isMatch) {
+                if (isMatch)
+                    res.send(generateResponse(user));
+                else
                     res.status(403).send("wrong password");
-                }
             })
         } else {
             user = new User({
                 username: req.body.username,
-                password: req.body.password
+                password: req.body.password,
+                role: Roles.USER
             });
 
             user.save((err) => {
                 if (err) { return next(err); }
+
+                res.send(generateResponse(user));
             });
         }
-
-        if (user)
-            res.send(generateResponse(user));
     });
 }
 

@@ -11,6 +11,26 @@ const tokenSign = (user: UserDocument) => sign({ id: user._id, role: user.role }
     expiresIn: 86400 // expires in 24 hours
 });
 
+const tokenUser = () => (req: Request, res: Response, next: NextFunction) => {
+    var token = req.headers['x-access-token'] || req.headers['authorization'];
+    if (token) {
+        var parts = token.toString().split(' ');
+        if (parts.length === 2) {
+            var scheme = parts[0];
+            var credentials = parts[1];
+            if (/^Bearer$/i.test(scheme)) {
+                token = credentials;
+
+                verify(token, config.secret, function (err, decoded) {
+                    req["user"] = decoded;
+                });
+            }
+        }
+    }
+
+    next();
+}
+
 const tokenVerify = (role: Roles = Roles.USER) => (req: Request, res: Response, next: NextFunction) => {
     var token = req.headers['x-access-token'] || req.headers['authorization'];
     if (!token)
@@ -30,7 +50,6 @@ const tokenVerify = (role: Roles = Roles.USER) => (req: Request, res: Response, 
                 if (decoded.role < role)
                     return res.status(403).send({ auth: false, message: 'Role' });
 
-                console.log(decoded);
                 req["user"] = decoded;
                 next();
             });
@@ -38,4 +57,4 @@ const tokenVerify = (role: Roles = Roles.USER) => (req: Request, res: Response, 
     }
 }
 
-export { tokenSign, tokenVerify }
+export { tokenSign, tokenUser, tokenVerify }

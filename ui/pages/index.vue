@@ -3,7 +3,7 @@
         <div class="masonry-3-col box-border mx-auto before:box-inherit after:box-inherit">
             <div
                 v-for="post in posts"
-                class="bg-white hover:shadow-lg dark:bg-gray-800 rounded break-inside mt-2"
+                class="bg-white hover:shadow-lg dark:bg-gray-800 rounded break-inside mb-4"
             >
                 <nuxt-link :to="post.url" class="flex flex-col">
                     <img

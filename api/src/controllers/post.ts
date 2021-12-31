@@ -10,6 +10,10 @@ export const getPosts = async (req: Request, res: Response, next: NextFunction):
     const q = req.query.q || "";
 
     var pipeline = [];
+    if (req["user"].role == 0)
+        pipeline.push({
+            $match: { publishedAt: { $exists: true } }
+        });
 
     if (q)
         pipeline.push({
@@ -38,6 +42,8 @@ export const getPosts = async (req: Request, res: Response, next: NextFunction):
     }], function (err, result) {
         if (!err && result[0])
             res.send(result[0])
+        else
+            res.send("no posts")
     });
 }
 
