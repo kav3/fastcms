@@ -1,5 +1,12 @@
 <template>
     <form @submit.prevent="submit">
+        <div>
+            <label>
+                <input type="checkbox" v-model="publish" />
+                Publish
+            </label>
+        </div>
+
         <label>Title</label>
         <input
             type="text"
@@ -30,7 +37,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from 'vue';
+import { computed, defineComponent, reactive } from 'vue';
 import usePosts from '@/composables/usePosts';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 // import SourceEditing from '@ckeditor/ckeditor5-source-editing/src/sourceediting';
@@ -41,6 +48,18 @@ import UploadAdapter from "../utils/uploadAdapter"
 export default defineComponent({
     setup() {
         const { post, getById, createOrUpdate } = usePosts();
+
+        const publish = computed({
+            get() {
+                return !!post.value["publishedAt"];
+            },
+            set(v) {
+                if(v)
+                    post.value["publishedAt"] = true;
+                else
+                    post.value["publishedAt"] = null;
+            }
+        })
 
         const route = useRoute()
         getById(route.params.id as string);
@@ -116,7 +135,7 @@ export default defineComponent({
             },
         })
 
-        return { post, submit, editorConfig }
+        return { post, publish, submit, editorConfig }
     },
     data() {
         return {

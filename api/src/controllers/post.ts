@@ -10,7 +10,7 @@ export const getPosts = async (req: Request, res: Response, next: NextFunction):
     const q = req.query.q || "";
 
     var pipeline = [];
-    if (req["user"].role == 0)
+    if (!req["user"] || (req["user"] && req["user"].role == 0))
         pipeline.push({
             $match: { publishedAt: { $exists: true } }
         });
@@ -96,6 +96,13 @@ export const post = async (req: Request, res: Response, next: NextFunction): Pro
         post.body = req.body.body || "";
         console.log(req.body.images)
         post.images = req.body.images || [];
+
+        console.log(req.body.publishedAt)
+
+        if (req.body.publishedAt)
+            post.publishedAt = Date.now();
+        else
+            post.publishedAt = null;
 
         post.save((err, post: PostDocument) => {
             if (err) { return next(err); }

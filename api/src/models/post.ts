@@ -5,7 +5,7 @@ export type PostDocument = mongoose.Document & {
     title: string;
     url: string;
     body: string;
-    publishedAt: Date;
+    publishedAt: any;
     user: UserDocument;
     images: string[];
 
